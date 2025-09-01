@@ -5,6 +5,13 @@ import { useEffect, useState } from "react";
 import { createClient } from "./lib/utlis/supabase/clinte";
 import { User } from "@supabase/supabase-js";
 import Image from "next/image";
+import { redirect } from "next/navigation";
+
+const supabase = createClient();
+const user = supabase.auth.getUser();
+if (!user) {
+  redirect("/auth");
+}
 
 export default function Home() {
   const [profile, setProfile] = useState<User | null>(null);
@@ -27,19 +34,20 @@ export default function Home() {
         <a className="mr-4" href="/chapters">
           Chapters
         </a>
+        <Image
+          src={profile?.user_metadata.avatar_url || "https://i.pravatar.cc/150"}
+          alt="avatar"
+          width={35}
+          height={35}
+          style={{ borderRadius: "50%" }}
+          className="fixed top-0 right-0 m-4"
+        />
       </nav>
       <div>
         <h1 className="text-4xl font-bold">
           {profile ? `Welcome, ${profile.user_metadata.name}` : "Welcome"}
         </h1>
       </div>
-      <Image
-        src={profile?.user_metadata.avatar_url || "https://i.pravatar.cc/150"}
-        alt="avatar"
-        width={35}
-        height={35}
-        style={{ borderRadius: "50%" }}
-      />
       <div>
         <Button onClick={signOut}>Sign out</Button>
       </div>
