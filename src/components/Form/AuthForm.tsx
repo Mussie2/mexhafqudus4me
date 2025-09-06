@@ -1,5 +1,5 @@
 "use client";
-import { signInWithGoogle } from "@/utlis/actions";
+import { signInWithGoogle } from "@/app/lib/utlis/actions";
 import React from "react";
 import { Button } from "./Button";
 
