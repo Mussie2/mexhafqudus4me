@@ -1,3 +1,4 @@
+import { Provider, User } from "@supabase/supabase-js";
 import { ReactNode } from "react";
 type PageName = "Home" | "settings" | "users" | "help";
 
@@ -51,6 +52,14 @@ export interface Book {
    * The name of the chapter, corresponds to `chapter_name` (text). This field can be null.
    */
   chapter_name: string | null;
+}
+
+export interface AuthContextValue {
+  isLoading: boolean;
+  error: Error | null;
+  user: User | null;
+  sginInWith: (provider: Provider) => Promise<void>;
+  signOut: () => Promise<void>;
 }
 
 export type { PageName, NavItemProps, PageContentProps };

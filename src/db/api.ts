@@ -1,6 +1,6 @@
 "use server";
-import { createClient } from "@/app/lib/utlis/supabase/server";
-import { Book } from "@/app/lib/types";
+import { createClient } from "@/lib/utlis/supabase/server";
+import { Book } from "@/lib/types";
 
 export default async function getBooks() {
   const supabase = await createClient();
