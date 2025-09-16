@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { createClient } from "../lib/utlis/supabase/clinte";
 import { redirect } from "next/navigation";
 
@@ -12,6 +13,7 @@ export default function Home() {
   return (
     <div>
       <h1>Mexhafqdus</h1>
+      <Link href="/auth">Login</Link>
     </div>
   );
 }
