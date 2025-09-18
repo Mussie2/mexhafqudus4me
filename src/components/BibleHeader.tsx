@@ -1,4 +1,3 @@
-import { signOut } from "@/lib/utlis/actions";
 import { Search, BookOpen, Settings, Moon, Sun } from "lucide-react";
 import { useState } from "react";
 
@@ -6,12 +5,14 @@ interface BibleHeaderProps {
   darkMode: boolean;
   onDarkModeToggle: () => void;
   onSearch: (query: string) => void;
+  onSignOut: () => void;
 }
 
 export function BibleHeader({
   darkMode,
   onDarkModeToggle,
   onSearch,
+  onSignOut,
 }: BibleHeaderProps) {
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -59,7 +60,7 @@ export function BibleHeader({
               )}
             </button>
             <button
-              onClick={signOut}
+              onClick={onSignOut}
               className="text-muted-foreground hover:text-foreground inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
             >
               <Settings className="w-5 h-5" />

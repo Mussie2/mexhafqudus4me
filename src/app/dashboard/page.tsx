@@ -4,7 +4,15 @@ import { useQuery } from "@tanstack/react-query";
 import getBooks from "../../db/api";
 import { BibleHeader } from "@/components/BibleHeader";
 import { useEffect, useState } from "react";
+import { signOut } from "@/lib/utlis/actions";
+import { createClient } from "@/lib/utlis/supabase/clinte";
+import { redirect } from "next/navigation";
 
+const supabase = await createClient();
+const user = await supabase.auth.getUser();
+if (user.data.user === null) {
+  redirect("/");
+}
 const Dashboard = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [activeSection, setActiveSection] = useState("read");
@@ -24,10 +32,14 @@ const Dashboard = () => {
   const handleDarkModeToggle = () => {
     setDarkMode(!darkMode);
   };
-
   const handleSearch = (query: string) => {
     console.log("Searching for:", query);
     // Implement search functionality here
+  };
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    redirect("/");
   };
 
   const handleBookChange = (book: string) => {
@@ -42,31 +54,30 @@ const Dashboard = () => {
   const handleSectionChange = (section: string) => {
     setActiveSection(section);
   };
-  if (!query.data) {
-    return <div>No data in database</div>;
-  } else if (query.isLoading) {
-    return <div>Loading...</div>;
-  }
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <BibleHeader
         darkMode={darkMode}
         onDarkModeToggle={handleDarkModeToggle}
         onSearch={handleSearch}
+        onSignOut={handleSignOut}
       />
       <main>
         {/* Added some padding for better layout */}
-        <div className="px-20 md:px-20">
+        <div className="px-40 md:px-40">
           {/* A single paragraph tag to contain all the verses */}
           <p className="text-lg leading-relaxed">
-            {query.data.map((verse, index) => (
-              // Use a React Fragment or a <span> for each verse segment
-              <span key={verse.book_id || index}>
-                <sup className="font-bold text-sm mr-1">{verse.verses}</sup>
-                {/* Add a space after the verse text for separation */}
-                {verse.verses_text}{" "}
-              </span>
-            ))}
+            {!query.data ? (
+              <span>Loading...</span>
+            ) : (
+              query.data.map((verse, index) => (
+                <span key={verse.book_id || index}>
+                  <sup className="font-bold text-sm mr-1">{verse.verses}</sup>
+                  {verse.verses_text}{" "}
+                </span>
+              ))
+            )}
           </p>
         </div>
       </main>
