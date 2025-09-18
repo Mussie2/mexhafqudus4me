@@ -12,13 +12,14 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const fetchData = async () => {
-      setUser(null);
       setIsLoading(true);
       const supabase = await createClient();
       try {
-        const jsonValue = await supabase.auth.getUser();
-        if (jsonValue.data.user) {
-          setUser(jsonValue.data.user);
+        const user = await supabase.auth.getUser();
+        if (user.data) {
+          setUser(user.data.user);
+        } else if (user.error) {
+          setError(user.error);
         }
       } catch (e) {
         console.error("Error getting user:", e);
@@ -28,7 +29,6 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
         setIsLoading(false);
       }
     };
-
     fetchData();
   }, []);
 

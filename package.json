@@ -9,9 +9,12 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@radix-ui/react-slot": "^1.1.2",
     "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.56.1",
     "@tanstack/react-query": "^5.86.0",
+    "class-variance-authority": "^0.7.1",
+    "lucide-react": "^0.544.0",
     "next": "^15.5.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"

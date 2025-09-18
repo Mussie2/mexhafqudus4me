@@ -2,55 +2,74 @@
 
 import { useQuery } from "@tanstack/react-query";
 import getBooks from "../../db/api";
+import { BibleHeader } from "@/components/BibleHeader";
+import { useEffect, useState } from "react";
 
 const Dashboard = () => {
+  const [darkMode, setDarkMode] = useState(false);
+  const [activeSection, setActiveSection] = useState("read");
+  const [currentBook, setCurrentBook] = useState("Genesis");
+  const [currentChapter, setCurrentChapter] = useState(1);
   const query = useQuery({ queryKey: ["books"], queryFn: getBooks });
+
+  useEffect(() => {
+    // Apply dark mode class to document
+    if (darkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [darkMode]);
+
+  const handleDarkModeToggle = () => {
+    setDarkMode(!darkMode);
+  };
+
+  const handleSearch = (query: string) => {
+    console.log("Searching for:", query);
+    // Implement search functionality here
+  };
+
+  const handleBookChange = (book: string) => {
+    setCurrentBook(book);
+    setCurrentChapter(1); // Reset to chapter 1 when changing books
+  };
+
+  const handleChapterChange = (chapter: number) => {
+    setCurrentChapter(chapter);
+  };
+
+  const handleSectionChange = (section: string) => {
+    setActiveSection(section);
+  };
   if (!query.data) {
     return <div>No data in database</div>;
   } else if (query.isLoading) {
     return <div>Loading...</div>;
   }
   return (
-    <div className="flex items-center justify-center">
-      <div>
-        <div className="absolute top-5 left-10 right-10 flex items-center justify-between">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            height="24px"
-            viewBox="0 -960 960 960"
-            width="24px"
-            fill="#e3e3e3"
-          >
-            <path d="M300-80q-58 0-99-41t-41-99v-520q0-58 41-99t99-41h500v600q-25 0-42.5 17.5T740-220q0 25 17.5 42.5T800-160v80H300Zm-60-267q14-7 29-10t31-3h20v-440h-20q-25 0-42.5 17.5T240-740v393Zm160-13h320v-440H400v440Zm-160 13v-453 453Zm60 187h373q-6-14-9.5-28.5T660-220q0-16 3-31t10-29H300q-26 0-43 17.5T240-220q0 26 17 43t43 17Z" />
-          </svg>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            height="24px"
-            viewBox="0 -960 960 960"
-            width="24px"
-            fill="#e3e3e3"
-          >
-            <path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
-          </svg>
+    <div className="min-h-screen bg-background text-foreground">
+      <BibleHeader
+        darkMode={darkMode}
+        onDarkModeToggle={handleDarkModeToggle}
+        onSearch={handleSearch}
+      />
+      <main>
+        {/* Added some padding for better layout */}
+        <div className="px-20 md:px-20">
+          {/* A single paragraph tag to contain all the verses */}
+          <p className="text-lg leading-relaxed">
+            {query.data.map((verse, index) => (
+              // Use a React Fragment or a <span> for each verse segment
+              <span key={verse.book_id || index}>
+                <sup className="font-bold text-sm mr-1">{verse.verses}</sup>
+                {/* Add a space after the verse text for separation */}
+                {verse.verses_text}{" "}
+              </span>
+            ))}
+          </p>
         </div>
-        <div className="flex items-center justify-center pt-12">
-          <h1 className="text-3xl font-bold">{query.data[0].name}</h1>
-        </div>
-        <div className="mli-auto max-w-[700px] pli-2 w-full sm:w-full mbe-12">
-          {query.data.map((book) => (
-            <span
-              key={book.book_id}
-              onClick={() => console.log(book)}
-              className="text-[18px] font-[Inter]"
-            >
-              <sup className="text-amber-300">{book.verses}</sup>
-              <a className="cursor-pointer hover:decoration-dashed hover:underline hover:decoration-amber-400 hover:decoration-2 hover:underline-offset-5">
-                {book.verses_text}
-              </a>
-            </span>
-          ))}
-        </div>
-      </div>
+      </main>
     </div>
   );
 };
