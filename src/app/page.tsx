@@ -12,7 +12,7 @@ if (user.data.user !== null) {
 export default function Home() {
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <Link href="/auth">Login</Link>
+      <Link href="/auth/login">Login</Link>
     </div>
   );
 }
